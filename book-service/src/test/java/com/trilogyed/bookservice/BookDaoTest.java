@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 public class BookDaoTest {
+
     @Autowired
     protected BookDao dao;
 
@@ -59,11 +60,11 @@ public class BookDaoTest {
 
         book = dao.addBook(book);
 
-        book = new Book();
-        book.setTitle("Daya Ke Phool");
-        book.setAuthor("Sant Darshan Singh Ji Maharaj");
+        Book book1 = new Book();
+        book1.setTitle("Daya Ke Phool");
+        book1.setAuthor("Sant Darshan Singh Ji Maharaj");
 
-        dao.updateBook(book);
+        dao.addBook(book1);
 
         List<Book> bList = dao.getAllBooks();
         assertEquals(2, bList.size());
@@ -78,7 +79,6 @@ public class BookDaoTest {
 
         book = dao.addBook(book);
 
-        book = new Book();
         book.setTitle("Daya Ke Phool");
         book.setAuthor("Sant Darshan Singh Ji Maharaj");
 
@@ -86,6 +86,6 @@ public class BookDaoTest {
 
         Book book1 = dao.getBook(book.getBookId());
 
-        assertEquals(book1, book);
+        assertEquals(book, book1);
     }
 }
