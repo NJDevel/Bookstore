@@ -12,9 +12,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class BookDaoTest implements BookDao {
+public class BookDaoTest {
     @Autowired
     protected BookDao dao;
 
@@ -31,32 +34,58 @@ public class BookDaoTest implements BookDao {
     public void tearDown() throws Exception {
     }
 
-    public BookDaoTest() {
-        super();
+    @Test
+    public void addGetDeleteBook() {
+        Book book = new Book();
+        book.setTitle("Meditation as Medication");
+        book.setAuthor("Sant Rajinder Singh Ji Maharaj");
+
+        book = dao.addBook(book);
+        Book book1 = dao.getBook(book.getBookId());
+
+        assertEquals(book1, book);
+
+        dao.deleteBook(book.getBookId());
+        book1 = dao.getBook(book.getBookId());
+        assertNull(book1);
     }
 
-    @Override
-    public Book getBook(int bookId) {
-        return null;
+    @Test
+    public void getAllBooks() {
+
+        Book book = new Book();
+        book.setTitle("Meditation as Medication");
+        book.setAuthor("Sant Rajinder Singh Ji Maharaj");
+
+        book = dao.addBook(book);
+
+        book = new Book();
+        book.setTitle("Daya Ke Phool");
+        book.setAuthor("Sant Darshan Singh Ji Maharaj");
+
+        dao.updateBook(book);
+
+        List<Book> bList = dao.getAllBooks();
+        assertEquals(2, bList.size());
     }
 
-    @Override
-    public List<Book> getAllBooks() {
-        return null;
-    }
+    @Test
+    public void updateBook() {
 
-    @Override
-    public Book addBook(Book book) {
-        return null;
-    }
+        Book book = new Book();
+        book.setTitle("Meditation as Medication");
+        book.setAuthor("Sant Rajinder Singh Ji Maharaj");
 
-    @Override
-    public void updateBook(Book book) {
+        book = dao.addBook(book);
 
-    }
+        book = new Book();
+        book.setTitle("Daya Ke Phool");
+        book.setAuthor("Sant Darshan Singh Ji Maharaj");
 
-    @Override
-    public void deleteBook(int bookId) {
+        dao.updateBook(book);
 
+        Book book1 = dao.getBook(book.getBookId());
+
+        assertEquals(book1, book);
     }
 }
