@@ -1,4 +1,4 @@
-package com.trilogyed.noteservice.util.messages;
+package com.trilogyed.bookservice.messages;
 
 import java.util.Objects;
 
