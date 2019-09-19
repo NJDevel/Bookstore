@@ -1,12 +1,16 @@
-package com.trilogyed.notequeueconsumer.model;
+package com.trilogyed.bookservice.messages;
 
 import java.util.Objects;
 
-public class Note {
+public class NoteEntry {
 
     private int noteId;
     private int bookId;
     private String note;
+
+    public NoteEntry(){
+
+    }
 
     public int getNoteId() {
         return noteId;
@@ -36,10 +40,10 @@ public class Note {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Note note1 = (Note) o;
-        return getNoteId() == note1.getNoteId() &&
-                getBookId() == note1.getBookId() &&
-                getNote().equals(note1.getNote());
+        NoteEntry noteEntry1 = (NoteEntry) o;
+        return getNoteId() == noteEntry1.getNoteId() &&
+                getBookId() == noteEntry1.getBookId() &&
+                getNote().equals(noteEntry1.getNote());
     }
 
     @Override
@@ -49,7 +53,7 @@ public class Note {
 
     @Override
     public String toString() {
-        return "Note{" +
+        return "NoteEntry{" +
                 "noteId=" + noteId +
                 ", bookId=" + bookId +
                 ", note='" + note + '\'' +
