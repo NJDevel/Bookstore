@@ -1,5 +1,8 @@
 package com.trilogyed.bookservice.controller;
 
+import com.trilogyed.bookservice.model.Note;
+import com.trilogyed.bookservice.service.ServiceLayer;
+import com.trilogyed.bookservice.viewmodel.BookViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +14,7 @@ import java.util.List;
 public class BookServiceController {
 
     @Autowired
-    Service sl;
+    ServiceLayer sl;
 
 
     // -----------------------BOOKS-----------------------------------------------------
@@ -25,16 +28,16 @@ public class BookServiceController {
     @RequestMapping(value = "/books/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public BookViewModel getBook(@PathVariable("id") int bookId) {
-        BookViewModel bvm = sl.findBookById(id);
+        BookViewModel bvm = sl.findBook(bookId);
         if (bvm == null)
-            throw new NotFoundException("Book could not be retrieved for id " + bookId);
+            throw new IllegalArgumentException("Book could not be retrieved for id " + bookId);
         return bvm;
     }
 
     @RequestMapping(value = "/books", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<BookViewModel> getAllBooks(){
-        return sl.getAllBooks();
+        return sl.findAllBooks();
     }
 
     @RequestMapping(value = "/books/{id}", method = RequestMethod.PUT)
@@ -47,7 +50,7 @@ public class BookServiceController {
     @RequestMapping(value = "/books/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public String deleteBook(@PathVariable("id") int bookId) {
-        sl.deleteBook(bookId);
+        sl.removeBook(bookId);
         return "Book successfully deleted.";
     }
 
@@ -56,44 +59,44 @@ public class BookServiceController {
     @RequestMapping(value = "/notes", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Note createNote(@RequestBody @Valid Note note) {
-        return sl.addNote(note);
+        return sl.saveNote(note);
     }
 
     @RequestMapping(value = "/notes/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public BookViewModel getNote(@PathVariable("id") int noteId) {
-        BookViewModel bvm = sl.getNote(noteId);
+        BookViewModel bvm = sl.findNote(noteId);
         if (bvm == null)
-            throw new NotFoundException("Note could not be retrieved for id " + noteId);
+            throw new IllegalArgumentException("Note could not be retrieved for id " + noteId);
         return bvm;
     }
 
     @RequestMapping(value = "/notes/book/{book_id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public BookViewModel getNote(@PathVariable("id") int bookId) {
-        BookViewModel bvm = sl.getNotesByBook(bookId);
+    public BookViewModel getNoteByBook(@PathVariable("id") int bookId) {
+        BookViewModel bvm = sl.findNotesByBook(bookId);
         if (bvm == null)
-            throw new NotFoundException("Note could not be retrieved for id " + bookId);
+            throw new IllegalArgumentException("Note could not be retrieved for id " + bookId);
         return bvm;
     }
 
     @RequestMapping(value = "/notes", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<Note> getAllNotes(){
-        return sl.getAllNotes();
+        return sl.findAllNotes();
     }
 
     @RequestMapping(value = "/notes/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public String updateNote(@PathVariable("id") int noteId, @RequestBody @Valid Note note) {
-        sl.updateNote(nvm);
+        sl.updateNote(note);
         return "Note successfully updated.";
     }
 
     @RequestMapping(value = "/notes/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public String deleteNote(@PathVariable("id") int noteId) {
-        sl.deleteNote(noteId);
+        sl.removeNote(noteId);
         return "Note successfully deleted.";
     }
 
