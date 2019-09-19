@@ -112,6 +112,40 @@ public class NoteDaoTest {
 
     @Test
     public void getNotesByBook(){
+
+        List<Note> nList = new ArrayList<>();
+
+        assertEquals(nList.size(), 0);
+
+        Note note = new Note();
+        note.setBookId(7);
+        note.setNote("Winner of the 2019 Nebula Award!");
+
+        nDao.addNote(note);
+
+        note = new Note();
+        note.setBookId(7);
+        note.setNote("This book is a must read!");
+
+        nDao.addNote(note);
+
+        note = new Note();
+        note.setBookId(3);
+        note.setNote("Highly recommended for fans of the last book!");
+        note = nDao.addNote(note);
+        nList.add(note);
+
+        nList = nDao.getNotesByBook(7);
+
+        assertEquals(2, nList.size());
+
+        nList = nDao.getNotesByBook(3);
+
+        assertEquals(1, nList.size());
+
+        nList = nDao.getNotesByBook(2);
+
+        assertEquals(0, nList.size());
         
     }
 }
