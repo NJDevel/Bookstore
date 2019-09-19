@@ -1,0 +1,147 @@
+openapi: 3.0.0
+info:
+  title: Note Service
+
+  description:
+    A simple web service that tracks note data to be consumed by Book Service.
+  version: 0.0.1
+servers:
+  - url: 'http://localhost:1984'
+    description: Local dev server
+paths:
+  /notes:
+    post:
+      summary: Creates a new note.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Note'
+      responses:
+        '201':
+          description: A Note
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '400':
+          description: Invalid request syntax.
+        '422':
+          description: List of 1 or more errors if required fields are missing or violate JSR 303 validation.
+    get:
+      summary: Retrieves all notes
+      responses:
+        '200':
+          description: Note list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Note' 
+        '404':
+          description: Request not found.
+          
+  /notes/{id}:
+    # GET, DELETE, and PUT are all under this path entry
+    get:
+      summary: Retrieves the note information.
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          description: id of the note you would like to retrieve.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Note matching given id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '404':
+          description: Request not found.
+                
+    put:
+      summary: Updates an existing note.
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          description: id of the note you would like to update.
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Note'
+      responses:
+        '201':
+          description: Note succesfully updated.
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid request syntax.
+        '422':
+          description: Incomplete note information. One or more required fields missing.
+      
+    delete:
+      summary: Deletes a note based on the id
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          description: Id of the note you would like to delete.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Note successfully deleted.
+          content:
+            application/json:
+              schema:
+                type: string
+                
+  /notes/book/{bookId}:
+    get:
+      summary: Retrieves all notes for a given book
+      parameters: 
+        - name: bookId
+          in: path
+          required: true
+          description: id of the book for the notes you would like to retrieve.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of Notes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Note' 
+        '404':
+          description: Request not found.
+components:
+  schemas:
+    Note:
+      type: object
+      properties:
+        noteId:
+          type: integer
+        bookId:
+          type: integer
+        note:
+          type: string
+      required:
+          - noteId
+          - bookId
+          - note
+        
