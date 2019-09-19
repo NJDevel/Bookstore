@@ -1,0 +1,258 @@
+openapi: 3.0.0
+info:
+  title: Book Service
+
+  description:
+    A simple web service that tracks book data and associated note data for each book.
+  version: 0.0.1
+servers:
+  - url: 'http://localhost:4242'
+    description: Local dev server
+paths:
+  /books:
+    post:
+      summary: Creates a new book.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookViewModel'
+      responses:
+        '201':
+          description: A BookViewModel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookViewModel'
+        '400':
+          description: Invalid request syntax.
+        '422':
+          description: List of 1 or more errors if required fields are missing or violate JSR 303 validation.
+    get:
+      summary: Retrieves all books
+      responses:
+        '200':
+          description: Book list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookViewModel' 
+        '404':
+          description: Request not found.
+  /books/{id}:
+    # GET, DELETE, and PUT are all under this path entry
+    get:
+      summary: Retrieves the book information.
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          description: id of the book you would like to retrieve.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: BookViewModel matching given id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookViewModel'
+        '404':
+          description: Request not found.
+                
+    put:
+      summary: Updates an existing book.
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          description: id of the book you would like to update.
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookViewModel'
+      responses:
+        '201':
+          description: Book succesfully updated.
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid request syntax.
+        '422':
+          description: Incomplete book information. One or more required fields missing.
+      
+    delete:
+      summary: Deletes a book based on the id
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          description: Id of the book you would like to delete.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Book successfully deleted.
+          content:
+            application/json:
+              schema:
+                type: string
+  /notes:
+    post:
+      summary: Creates a new note.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Note'
+      responses:
+        '201':
+          description: A Note
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '400':
+          description: Invalid request syntax.
+        '422':
+          description: List of 1 or more errors if required fields are missing or violate JSR 303 validation.
+    get:
+      summary: Retrieves all notes
+      responses:
+        '200':
+          description: Note list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Note' 
+        '404':
+          description: Request not found.
+          
+  /notes/{id}:
+    # GET, DELETE, and PUT are all under this path entry
+    get:
+      summary: Retrieves the note information.
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          description: id of the note you would like to retrieve.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Book with note matching given id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookViewModel'
+        '404':
+          description: Request not found.
+                
+    put:
+      summary: Updates an existing note.
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          description: id of the note you would like to update.
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Note'
+      responses:
+        '201':
+          description: Note succesfully updated.
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid request syntax.
+        '422':
+          description: Incomplete note information. One or more required fields missing.
+      
+    delete:
+      summary: Deletes a note based on the id
+      parameters: 
+        - name: id
+          in: path
+          required: true
+          description: Id of the note you would like to delete.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Note successfully deleted.
+          content:
+            application/json:
+              schema:
+                type: string
+                
+  /notes/book/{bookId}:
+    get:
+      summary: Retrieves all notes for a given book
+      parameters: 
+        - name: bookId
+          in: path
+          required: true
+          description: id of the book for the notes you would like to retrieve.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Book with list of associated Notes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookViewModel' 
+        '404':
+          description: Request not found.
+components:
+  schemas:
+    BookViewModel:
+      type: object
+      properties:
+        bookId: 
+          type: integer
+        title:
+          type: string
+        author:
+          type: string
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Note'
+      required: 
+        - bookId
+        - title
+        - author
+    Note:
+      type: object
+      properties:
+        noteId:
+          type: integer
+        bookId:
+          type: integer
+        note:
+          type: string
+        
+        
