@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Repository
-public class BookDaoJdbcTemplateImpl implements BookDao{
+public class BookDaoJdbcTemplateImpl implements BookDao {
 
     private final String INSERT_BOOK_SQL =
             "insert into book (title, author) values (?, ?)";
