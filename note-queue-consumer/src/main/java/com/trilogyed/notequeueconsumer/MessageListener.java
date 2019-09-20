@@ -10,6 +10,12 @@ public class MessageListener {
     @RabbitListener(queues = NoteQueueConsumerApplication.QUEUE_NAME)
     public void receiveMessage(NoteEntry msg) {
         System.out.println(msg.toString());
+        //send message to note api
+//        if(noteID 1= null){
+//            //update note
+//        } else {
+//            //create note
+//        }
     }
 
 }

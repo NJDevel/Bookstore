@@ -241,8 +241,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Note'
-      required: 
-        - bookId
+      required:
         - title
         - author
     Note:
