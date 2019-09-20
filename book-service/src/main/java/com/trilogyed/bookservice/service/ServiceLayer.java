@@ -1,8 +1,10 @@
 package com.trilogyed.bookservice.service;
 
+import com.netflix.discovery.converters.Auto;
 import com.trilogyed.bookservice.dao.BookDao;
 import com.trilogyed.bookservice.model.Book;
 import com.trilogyed.bookservice.model.Note;
+import com.trilogyed.bookservice.util.feign.NoteServiceClient;
 import com.trilogyed.bookservice.util.messages.NoteEntry;
 import com.trilogyed.bookservice.viewmodel.BookViewModel;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -17,15 +19,17 @@ import java.util.List;
 public class ServiceLayer {
 
     private BookDao bookDao;
+    private RabbitTemplate rabbitTemplate;
     public static final String EXCHANGE = "note-exchange";
     public static final String ROUTING_KEY = "note.#";
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private NoteServiceClient noteClient;
 
     @Autowired
-    public ServiceLayer(BookDao bookDao, RabbitTemplate rabbitTemplate){
+    public ServiceLayer(BookDao bookDao, NoteServiceClient noteClient, RabbitTemplate rabbitTemplate){
         this.bookDao = bookDao;
+        this.noteClient = noteClient;
         this.rabbitTemplate = rabbitTemplate;
     }
 
@@ -104,15 +108,28 @@ public class ServiceLayer {
     }
 
     public BookViewModel findNote(int noteId){
+
+        Note note = noteClient.getNote(noteId);
+
+        Book book = bookDao.getBook(note.getBookId());
+
+        List<Note> noteList = new ArrayList<>();
+
+        noteList.add(note);
+
         BookViewModel bvm = new BookViewModel();
-        //find note
+        bvm.setBookId(book.getBookId());
+        bvm.setTitle(book.getTitle());
+        bvm.setAuthor(book.getAuthor());
+        bvm.setNotes(noteList);
+
         return bvm;
+
     }
 
     public List<Note> findAllNotes(){
-        List<Note> noteList = new ArrayList<>();
         //find book
-        return noteList;
+        return noteClient.getAllNotes();
     }
 
     public void updateNote(Note note){
@@ -128,8 +145,17 @@ public class ServiceLayer {
     }
 
     public BookViewModel findNotesByBook(int bookId){
-        //build bookview model
+
+        Book book = bookDao.getBook(bookId);
+
+        List<Note> noteList = noteClient.getNotesByBook(bookId);
+
         BookViewModel bvm = new BookViewModel();
+        bvm.setBookId(book.getBookId());
+        bvm.setTitle(book.getTitle());
+        bvm.setAuthor(book.getAuthor());
+        bvm.setNotes(noteList);
+
         return bvm;
     }
 
