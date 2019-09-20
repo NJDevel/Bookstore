@@ -9,8 +9,9 @@ public class NoteEntry {
     private String note;
 
     public NoteEntry(){
-
     }
+
+    public NoteEntry(int bookId, String note){};
 
     public int getNoteId() {
         return noteId;

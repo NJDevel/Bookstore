@@ -3,6 +3,7 @@ package com.trilogyed.bookservice.controller;
 import com.trilogyed.bookservice.model.Note;
 import com.trilogyed.bookservice.service.ServiceLayer;
 import com.trilogyed.bookservice.viewmodel.BookViewModel;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,10 @@ public class BookServiceController {
 
     @Autowired
     ServiceLayer sl;
+
+
+
+
 
 
     // -----------------------BOOKS-----------------------------------------------------
@@ -42,9 +47,9 @@ public class BookServiceController {
         return sl.findAllBooks();
     }
 
-    @RequestMapping(value = "/books/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/books", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public String updateBook(@PathVariable("id") int bookId, @RequestBody @Valid BookViewModel bvm) {
+    public String updateBook(@RequestBody @Valid BookViewModel bvm) {
         sl.updateBook(bvm);
         return "Book successfully updated.";
     }
