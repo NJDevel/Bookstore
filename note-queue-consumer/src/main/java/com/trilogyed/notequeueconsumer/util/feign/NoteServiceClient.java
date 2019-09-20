@@ -14,6 +14,6 @@ public interface NoteServiceClient {
 
     @RequestMapping(value = "/notes/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public String updateNote(@RequestBody Note note);
+    public String updateNote(@PathVariable("id") int noteId, @RequestBody Note note);
 
 }

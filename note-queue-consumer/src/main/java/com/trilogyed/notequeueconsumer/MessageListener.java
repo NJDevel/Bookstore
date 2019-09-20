@@ -28,7 +28,7 @@ public class MessageListener {
         if(note.getNoteId() == 0){
             noteClient.createNote(note);
         } else
-        noteClient.updateNote(note);
+        noteClient.updateNote(note.getNoteId(), note);
 
     }
 

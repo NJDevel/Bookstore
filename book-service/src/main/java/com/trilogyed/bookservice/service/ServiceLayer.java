@@ -136,7 +136,10 @@ public class ServiceLayer {
 
     public void updateNote(Note note){
         //Note Client Service - Message Queue note
-        NoteEntry msg = new NoteEntry(note.getBookId(), note.getNote());
+        NoteEntry msg = new NoteEntry();
+        msg.setBookId(note.getBookId());
+        msg.setNote(note.getNote());
+        msg.setNoteId(note.getNoteId());
         System.out.println("Sending message...");
         rabbitTemplate.convertAndSend(EXCHANGE, ROUTING_KEY, msg);
         System.out.println("Message Sent");

@@ -46,7 +46,7 @@ public class NoteController {
 
     @RequestMapping(value = "/notes/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public String updateNote(@RequestBody @Valid Note note) {
+    public String updateNote(@PathVariable("id") int noteId, @RequestBody @Valid Note note) {
         sl.updateNote(note);
         return "Note successfully updated.";
     }
