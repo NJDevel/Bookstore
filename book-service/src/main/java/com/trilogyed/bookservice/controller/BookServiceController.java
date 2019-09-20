@@ -4,6 +4,7 @@ import com.trilogyed.bookservice.model.Note;
 import com.trilogyed.bookservice.service.ServiceLayer;
 import com.trilogyed.bookservice.viewmodel.BookViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RefreshScope
 public class BookServiceController {
 
     @Autowired
@@ -71,9 +73,9 @@ public class BookServiceController {
         return bvm;
     }
 
-    @RequestMapping(value = "/notes/book/{book_id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/notes/book/{bookId}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public BookViewModel getNoteByBook(@PathVariable("id") int bookId) {
+    public BookViewModel getNoteByBook(@PathVariable("bookId") int bookId) {
         BookViewModel bvm = sl.findNotesByBook(bookId);
         if (bvm == null)
             throw new IllegalArgumentException("Note could not be retrieved for id " + bookId);

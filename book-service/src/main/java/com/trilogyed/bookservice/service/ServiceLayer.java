@@ -1,8 +1,10 @@
 package com.trilogyed.bookservice.service;
 
+import com.netflix.discovery.converters.Auto;
 import com.trilogyed.bookservice.dao.BookDao;
 import com.trilogyed.bookservice.model.Book;
 import com.trilogyed.bookservice.model.Note;
+import com.trilogyed.bookservice.util.feign.NoteServiceClient;
 import com.trilogyed.bookservice.viewmodel.BookViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,8 +19,13 @@ public class ServiceLayer {
     private BookDao bookDao;
 
     @Autowired
-    public ServiceLayer(BookDao bookDao){
+    private NoteServiceClient noteClient;
+
+
+    @Autowired
+    public ServiceLayer(BookDao bookDao, NoteServiceClient noteClient){
         this.bookDao = bookDao;
+        this.noteClient = noteClient;
     }
 
     /**************************************************************
@@ -69,15 +76,28 @@ public class ServiceLayer {
     }
 
     public BookViewModel findNote(int noteId){
+
+        Note note = noteClient.getNote(noteId);
+
+        Book book = bookDao.getBook(note.getBookId());
+
+        List<Note> noteList = new ArrayList<>();
+
+        noteList.add(note);
+
         BookViewModel bvm = new BookViewModel();
-        //find note
+        bvm.setBookId(book.getBookId());
+        bvm.setTitle(book.getTitle());
+        bvm.setAuthor(book.getAuthor());
+        bvm.setNotes(noteList);
+
         return bvm;
+
     }
 
     public List<Note> findAllNotes(){
-        List<Note> noteList = new ArrayList<>();
         //find book
-        return noteList;
+        return noteClient.getAllNotes();
     }
 
     public void updateNote(Note note){
@@ -89,8 +109,17 @@ public class ServiceLayer {
     }
 
     public BookViewModel findNotesByBook(int bookId){
-        //build bookview model
+
+        Book book = bookDao.getBook(bookId);
+
+        List<Note> noteList = noteClient.getNotesByBook(bookId);
+
         BookViewModel bvm = new BookViewModel();
+        bvm.setBookId(book.getBookId());
+        bvm.setTitle(book.getTitle());
+        bvm.setAuthor(book.getAuthor());
+        bvm.setNotes(noteList);
+
         return bvm;
     }
 
