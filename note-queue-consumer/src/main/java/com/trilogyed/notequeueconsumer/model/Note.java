@@ -1,17 +1,12 @@
-package com.trilogyed.notequeueconsumer.util.messages;
+package com.trilogyed.notequeueconsumer.model;
 
 import java.util.Objects;
 
-public class NoteEntry {
+public class Note {
 
     private int noteId;
     private int bookId;
     private String note;
-
-    public NoteEntry(){
-    }
-
-    public NoteEntry(int bookId, String note){};
 
     public int getNoteId() {
         return noteId;
@@ -41,10 +36,10 @@ public class NoteEntry {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NoteEntry noteEntry1 = (NoteEntry) o;
-        return getNoteId() == noteEntry1.getNoteId() &&
-                getBookId() == noteEntry1.getBookId() &&
-                getNote().equals(noteEntry1.getNote());
+        Note note1 = (Note) o;
+        return getNoteId() == note1.getNoteId() &&
+                getBookId() == note1.getBookId() &&
+                getNote().equals(note1.getNote());
     }
 
     @Override
@@ -54,7 +49,7 @@ public class NoteEntry {
 
     @Override
     public String toString() {
-        return "NoteEntry{" +
+        return "Note{" +
                 "noteId=" + noteId +
                 ", bookId=" + bookId +
                 ", note='" + note + '\'' +
