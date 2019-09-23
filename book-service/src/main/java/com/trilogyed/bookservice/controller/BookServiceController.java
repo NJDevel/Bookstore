@@ -20,10 +20,6 @@ public class BookServiceController {
     ServiceLayer sl;
 
 
-
-
-
-
     // -----------------------BOOKS-----------------------------------------------------
 
     @RequestMapping(value = "/books", method = RequestMethod.POST)
