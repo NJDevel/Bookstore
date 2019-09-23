@@ -19,7 +19,6 @@ public class BookServiceController {
     @Autowired
     ServiceLayer sl;
 
-
     // -----------------------BOOKS-----------------------------------------------------
 
     @RequestMapping(value = "/books", method = RequestMethod.POST)
@@ -32,8 +31,6 @@ public class BookServiceController {
     @ResponseStatus(HttpStatus.OK)
     public BookViewModel getBook(@PathVariable("id") int bookId) {
         BookViewModel bvm = sl.findBook(bookId);
-        if (bvm == null)
-            throw new IllegalArgumentException("Book could not be retrieved for id " + bookId);
         return bvm;
     }
 
@@ -69,8 +66,6 @@ public class BookServiceController {
     @ResponseStatus(HttpStatus.OK)
     public BookViewModel getNote(@PathVariable("id") int noteId) {
         BookViewModel bvm = sl.findNote(noteId);
-        if (bvm == null)
-            throw new IllegalArgumentException("Note could not be retrieved for id " + noteId);
         return bvm;
     }
 
@@ -78,8 +73,6 @@ public class BookServiceController {
     @ResponseStatus(HttpStatus.OK)
     public BookViewModel getNoteByBook(@PathVariable("bookId") int bookId) {
         BookViewModel bvm = sl.findNotesByBook(bookId);
-        if (bvm == null)
-            throw new IllegalArgumentException("Note could not be retrieved for id " + bookId);
         return bvm;
     }
 
