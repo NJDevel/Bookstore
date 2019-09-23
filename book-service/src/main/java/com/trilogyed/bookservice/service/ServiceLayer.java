@@ -44,13 +44,18 @@ public class ServiceLayer {
         book.setTitle(bvm.getTitle());
         book.setAuthor(bvm.getAuthor());
         book = bookDao.addBook(book);
-        bvm = buildBookViewModel(book);
+        bvm.setBookId(book.getBookId());
+        List<Note> newNotesList = new ArrayList<>();
+        bvm.setNotes(newNotesList);
+
         return bvm;
     }
 
     public BookViewModel findBook(int id) {
         //Retrieve book
+
         Book book = bookDao.getBook(id);
+
         if(book == null) {
             throw new BookNotFoundException("The book ID you have entered does not exist in our database. Book ID: "
                     + id );
@@ -76,6 +81,7 @@ public class ServiceLayer {
         book.setAuthor(bvm.getAuthor());
         book.setTitle(bvm.getTitle());
         bookDao.updateBook(book);
+
     }
 
     public void removeBook(int id){
@@ -91,7 +97,7 @@ public class ServiceLayer {
         bvm.setAuthor(book.getAuthor());
         bvm.setTitle(book.getTitle());
 
-        //retrieve notes placeholder
+        bvm.setNotes(noteClient.getNotesByBook(bvm.getBookId()));
 
         return bvm;
     }
@@ -101,7 +107,8 @@ public class ServiceLayer {
      Note API
      **************************************************************/
 
-    public Note saveNote(Note note) {
+    public void saveNote(Note note) {
+
         //Note Client service - Message Queue
         NoteEntry msg = new NoteEntry(note.getBookId(), note.getNote());
         msg.setBookId(note.getBookId());
@@ -110,8 +117,6 @@ public class ServiceLayer {
         rabbitTemplate.convertAndSend(EXCHANGE, ROUTING_KEY, msg);
         System.out.println("Message Sent");
 
-       //How to get back note with database-inserted ID
-        return note;
     }
 
     public BookViewModel findNote(int noteId){
@@ -150,11 +155,11 @@ public class ServiceLayer {
         msg.setNoteId(note.getNoteId());
         System.out.println("Sending message...");
         rabbitTemplate.convertAndSend(EXCHANGE, ROUTING_KEY, msg);
-        System.out.println("Message Sent");
+        System.out.println("Message sent");
     }
 
     public void removeNote(int noteId){
-        //delete note
+        noteClient.deleteNote(noteId);
     }
 
     public BookViewModel findNotesByBook(int bookId){

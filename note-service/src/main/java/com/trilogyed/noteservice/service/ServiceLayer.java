@@ -3,6 +3,7 @@ package com.trilogyed.noteservice.service;
 import com.trilogyed.noteservice.dao.NoteDao;
 import com.trilogyed.noteservice.model.Note;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -40,8 +41,12 @@ public class ServiceLayer {
     }
 
     public List<Note> findNotesByBook(int bookId){
-        List<Note> bookNotes = noteDao.getNotesByBook(bookId);
-
+        List<Note> bookNotes = new ArrayList<>();
+        try {
+            bookNotes = noteDao.getNotesByBook(bookId);
+        } catch (EmptyResultDataAccessException e) {
+            return bookNotes;
+        }
         return bookNotes;
     }
 }
