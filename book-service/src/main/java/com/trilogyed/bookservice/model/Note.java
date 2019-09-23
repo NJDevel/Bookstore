@@ -1,9 +1,15 @@
 package com.trilogyed.bookservice.model;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.Objects;
 
 public class Note {
 
+    @NotNull
+    @NotEmpty
+    @Positive
     private int noteId;
     private int bookId;
     private String note;
