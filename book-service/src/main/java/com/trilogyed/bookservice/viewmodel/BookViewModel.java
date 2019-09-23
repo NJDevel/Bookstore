@@ -3,6 +3,7 @@ package com.trilogyed.bookservice.viewmodel;
 
 import com.trilogyed.bookservice.model.Note;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ public class BookViewModel {
     private int bookId;
     private String title;
     private String author;
-    private List<Note> notes;
+    private List<Note> notes = new ArrayList<>();
 
     public int getBookId() {
         return bookId;

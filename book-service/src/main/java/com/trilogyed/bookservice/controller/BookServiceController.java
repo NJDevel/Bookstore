@@ -61,8 +61,8 @@ public class BookServiceController {
 
     @RequestMapping(value = "/notes", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public Note createNote(@RequestBody @Valid Note note) {
-        return sl.saveNote(note);
+    public void createNote(@RequestBody @Valid Note note) {
+         sl.saveNote(note);
     }
 
     @RequestMapping(value = "/notes/{id}", method = RequestMethod.GET)
