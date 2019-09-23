@@ -25,9 +25,7 @@ public class ServiceLayer {
 
     public Note findNote(int noteId){
         Note note = noteDao.getNote(noteId);
-
         return note;
-
     }
 
     public List<Note> findAllNotes(){

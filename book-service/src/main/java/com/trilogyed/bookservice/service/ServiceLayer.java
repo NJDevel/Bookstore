@@ -1,7 +1,8 @@
 package com.trilogyed.bookservice.service;
 
-import com.netflix.discovery.converters.Auto;
 import com.trilogyed.bookservice.dao.BookDao;
+import com.trilogyed.bookservice.exception.BookNotFoundException;
+import com.trilogyed.bookservice.exception.NoteNotFoundException;
 import com.trilogyed.bookservice.model.Book;
 import com.trilogyed.bookservice.model.Note;
 import com.trilogyed.bookservice.util.feign.NoteServiceClient;
@@ -55,14 +56,11 @@ public class ServiceLayer {
 
         Book book = bookDao.getBook(id);
 
-        BookViewModel bvm = new BookViewModel();
-
-        try{
-            bvm = buildBookViewModel(book);
-        } catch (Exception e) {
-            return null;
+        if(book == null) {
+            throw new BookNotFoundException("The book ID you have entered does not exist in our database. Book ID: "
+                    + id );
         }
-
+        BookViewModel bvm = buildBookViewModel(book);
         return bvm;
     }
 
@@ -124,6 +122,9 @@ public class ServiceLayer {
     public BookViewModel findNote(int noteId){
 
         Note note = noteClient.getNote(noteId);
+        if(note == null) {
+            throw new NoteNotFoundException("The note ID you entered does not exist in our database. Note ID: " + noteId);
+        }
 
         Book book = bookDao.getBook(note.getBookId());
 
@@ -164,6 +165,10 @@ public class ServiceLayer {
     public BookViewModel findNotesByBook(int bookId){
 
         Book book = bookDao.getBook(bookId);
+        if(book == null) {
+            throw new BookNotFoundException("The book ID you have entered does not exist in our database. Book ID: "
+                    + bookId );
+        }
 
         List<Note> noteList = noteClient.getNotesByBook(bookId);
 
